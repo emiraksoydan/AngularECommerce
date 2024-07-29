@@ -8,8 +8,8 @@ namespace Core.Concrete
 {
     public class UserOperationClaim
     {
-        public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-        public Guid OperationClaimId { get; set; }
+        public Guid ID { get; set; }
+        public Guid UserID { get; set; }
+        public Guid OperationClaimID { get; set; }
     }
 }
