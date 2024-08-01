@@ -9,5 +9,6 @@ namespace Business.Constants
     public static class Messages
     {
         public static string createToken = "Token Oluşturuldu";
+        public static string SuccessfulLogin = "Giriş yapıldı";
     }
 }

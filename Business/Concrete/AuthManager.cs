@@ -38,19 +38,19 @@ namespace Business.Concrete
         {
             var userToCheck = userService.GetByMail(userForLoginDto.Email).Data;
             if (userToCheck != null) {
-                return new ErrorDataResult<User>(Messages.UserNotFound);
+                //return new ErrorDataResult<User>(Messages.UserNotFound);
             }
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                return new ErrorDataResult<User>(Messages.PasswordError);
+                //return new ErrorDataResult<User>(Messages.PasswordError);
             }
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
 
-        public IDataResult<User> Register(UserForRegisterDTO userForRegisterDto, string password)
-        {
+        //public IDataResult<User> Register(UserForRegisterDTO userForRegisterDto, string password)
+        //{
             
-        }
+        //}
 
         public IResult UserExists(string email)
         {
