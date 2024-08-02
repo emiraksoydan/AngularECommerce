@@ -1,0 +1,40 @@
+﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
+using Business.Abstract;
+using Business.Concrete;
+using Castle.DynamicProxy;
+using Core.Interceptors;
+using Core.Security.JWT;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.DependencyResolvers.Autofac
+{
+    public class AutofacBusinessModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+       
+            builder.RegisterType<UserManager>().As<IUserService>();
+            builder.RegisterType<EfUserDal>().As<IUserDal>();
+
+            builder.RegisterType<AuthManager>().As<IAuthService>();
+            builder.RegisterType<JWTHelper>().As<ITokenHelper>();
+            //builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
+
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+                .EnableInterfaceInterceptors(new ProxyGenerationOptions()
+                {
+                    Selector = new AspectInterceptorSelector()
+                }).SingleInstance();
+        }
+    }
+}

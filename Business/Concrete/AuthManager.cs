@@ -38,23 +38,41 @@ namespace Business.Concrete
         {
             var userToCheck = userService.GetByMail(userForLoginDto.Email).Data;
             if (userToCheck != null) {
-                //return new ErrorDataResult<User>(Messages.UserNotFound);
+                return new ErrorDataResult<User>(Messages.UserNotFound);
             }
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                //return new ErrorDataResult<User>(Messages.PasswordError);
+                return new ErrorDataResult<User>(Messages.PasswordError);
             }
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
 
-        //public IDataResult<User> Register(UserForRegisterDTO userForRegisterDto, string password)
-        //{
-            
-        //}
+        public IDataResult<User> Register(UserForRegisterDTO userForRegisterDto, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+
+            HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            var newuser = new User
+            {
+                Email = userForRegisterDto.Email,
+                Name = userForRegisterDto.FirstName,
+                LastName = userForRegisterDto.LastName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true
+            };
+            userService.Add(newuser);
+            return new SuccessDataResult<User>(newuser,Messages.SuccesfulRegister);
+        }
 
         public IResult UserExists(string email)
         {
-            throw new NotImplementedException();
+
+            if (userService.GetByMail(email).Data != null)
+            {
+                return new ErrorResult(Messages.UserAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }
